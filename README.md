@@ -20,7 +20,7 @@ image: atlassian/pipelines-awscli
 
 pipelines:
   branches:
-    dev:
+    branch_name:
       - step:
           name: Push to ECR
           script: 
@@ -43,14 +43,16 @@ pipelines:
 #####
 
 Dockerfile Sample:
+####
+
 FROM openjdk:11
 WORKDIR /app
 COPY MyApp.jar /app
 CMD ["java", "-jar", "MyApp.jar"]
 
-#######
+#####
 Deployment.yaml Sample:
-#########
+#####
 
 apiVersion: apps/v1
 kind: Deployment
