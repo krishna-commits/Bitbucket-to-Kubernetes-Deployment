@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: APP_NAME
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http: HOST_PATH
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: SERVICE_NAME
+            port:
+              number: PORT

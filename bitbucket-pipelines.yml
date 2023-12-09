@@ -1,0 +1,24 @@
+image: atlassian/pipelines-awscli
+
+pipelines:
+  branches:
+    dev:
+      - step:
+          name: Push to ECR
+          script: 
+            - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ********.dkr.ecr.us-east-2.amazonaws.com
+            - docker build -t $DOCKER_REGISTRY:latest .
+            - docker push $DOCKER_REGISTRY:latest
+       - step:
+          name: Deployment in Kubernetes
+          script:
+            - pipe: atlassian/aws-eks-kubectl-run:1.2.0
+              variables:
+                AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+                AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+                AWS_DEFAULT_REGION: "REGION"
+                CLUSTER_NAME: "CLUSTER_NAME"
+                KUBECTL_COMMAND: "apply"
+                #KUBECTL_COMMAND: "rollout restart deployment DEPLOYMENT_NAME -n NAMESPACE_NAME"
+                RESOURCE_PATH: "LOACATION_OF_Deployment.yaml"
+                DEBUG: "true"
